@@ -1,5 +1,21 @@
 # Node modules
 node_modules/
 
-# Package lock file
+# Next.js build output
+.next/
+out/
+
+# Logs
+npm-debug.log*
+
+# Mac system files
+*.DS_Store
+
+# Dependency lock files 
 package-lock.json
+
+# VS Code settings
+.vscode/
+
+# Coverage directory used by tools like Jest
+coverage/
