@@ -3,9 +3,11 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
 import { LatestPay } from '@/app/lib/definitions';
-import {fetchLatestPays} from "@/app/lib/data";
+import { fetchLatestPays } from "@/app/lib/data";
+import { user } from '@/app/lib/placeholder-data';
+import { formatCurrency } from '@/app/lib/utils';
 export default async function LatestPays() {
-    const latestPays = await fetchLatestPays();
+  const latestPays: LatestPay[] = await fetchLatestPays(user.id);
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
@@ -20,13 +22,11 @@ export default async function LatestPays() {
               <div
                 key={pay.id}
                 className={clsx(
-                  'flex flex-row items-center justify-between py-4',
-                  {
-                    'border-t': i !== 0,
-                  },
+                  'grid grid-cols-12 items-center py-4 gap-4',
+                  { 'border-t': i !== 0 }
                 )}
               >
-                <div className="flex items-center">
+                <div className="col-span-6 flex items-center">
                   <Image
                     src={pay.image_url}
                     alt={`${pay.name}'s profile picture`}
@@ -43,10 +43,11 @@ export default async function LatestPays() {
                     </p>
                   </div>
                 </div>
-                <p
-                  className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
-                >
-                  {pay.amount}
+                <div className="col-span-3 hidden sm:flex items-center text-sm text-gray-500">
+                  {pay.note}
+                </div>
+                <p className={`${lusitana.className} col-span-3 text-right truncate text-sm font-medium md:text-base`}>
+                  {formatCurrency(pay.amount)}
                 </p>
               </div>
             );

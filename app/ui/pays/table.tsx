@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import { UpdatePay, DeletePay } from '@/app/ui/pays/buttons';
 import { fetchFilteredPays } from '@/app/lib/data';
+import type { PaysTable } from '@/app/lib/definitions';
+import { ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
+import { formatCurrency } from '@/app/lib/utils';
 
 //
 export default async function PaysTable({
@@ -10,7 +14,7 @@ export default async function PaysTable({
   query: string;
   currentPage: number;
 }) {
-  const pays = await fetchFilteredPays(query, currentPage);
+  const pays: PaysTable[] = await fetchFilteredPays(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
@@ -55,6 +59,15 @@ export default async function PaysTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Email
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Amount
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Description
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Payment Direction
+                </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -81,10 +94,37 @@ export default async function PaysTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {pay.email}
                   </td>
+                  <td
+                    className={clsx(
+                      'whitespace-nowrap px-3 py-3 font-medium',
+                      {
+                        'text-green-600': pay.status === 'pending',
+                        'text-red-600': pay.status === 'paid',
+                      }
+                    )}
+                  >
+                    {formatCurrency(pay.amount)}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {pay.note === '' ? '-' : pay.note}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {pay.direction === 'Outgoing' ? (
+                      <>
+                        <ArrowUpTrayIcon className="mr-1 h-4 w-4" />
+                        Sent
+                      </>
+                    ) : (
+                      <>
+                        <ArrowDownTrayIcon className="mr-1 h-4 w-4" />
+                        Received
+                      </>
+                    )}
+                  </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdatePay id={pay.id} />
-                      <DeletePay id={pay.id} />
+                      {/* <DeletePay id={pay.id} /> */}
                     </div>
                   </td>
                 </tr>

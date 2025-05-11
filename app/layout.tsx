@@ -1,7 +1,8 @@
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 
-export const experimental_ppr = true;
+// experimental_ppr only supported for Next 15
+// export const experimental_ppr = true;
 
 export default function RootLayout({
   children,
