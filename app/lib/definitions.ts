@@ -54,7 +54,6 @@ export type PaysTable = LatestPay & {
   contact_id: string;
   date: string;
   status: 'pending' | 'paid';
-  direction: string;
 };
 
 export type ContactsTableType = {

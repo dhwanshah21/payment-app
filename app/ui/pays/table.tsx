@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { UpdatePay, DeletePay } from '@/app/ui/pays/buttons';
 import { fetchFilteredPays } from '@/app/lib/data';
 import type { PaysTable } from '@/app/lib/definitions';
-import { ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { formatCurrency } from '@/app/lib/utils';
 
@@ -66,7 +65,7 @@ export default async function PaysTable({
                   Description
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Payment Direction
+                  Payment Status
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -109,22 +108,26 @@ export default async function PaysTable({
                     {pay.note === '' ? '-' : pay.note}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {pay.direction === 'Outgoing' ? (
+                    {pay.status === 'pending' ? (
                       <>
-                        <ArrowUpTrayIcon className="mr-1 h-4 w-4" />
-                        Sent
+                        {/* <ArrowUpTrayIcon className="mr-1 h-4 w-4" /> */}
+                        Pending
                       </>
                     ) : (
                       <>
-                        <ArrowDownTrayIcon className="mr-1 h-4 w-4" />
-                        Received
+                        {/* <ArrowDownTrayIcon className="mr-1 h-4 w-4" /> */}
+                        Paid
                       </>
                     )}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdatePay id={pay.id} />
-                      {/* <DeletePay id={pay.id} /> */}
+                      {pay.status === 'pending' && (
+                        <>
+                          <UpdatePay id={pay.id} />
+                          <DeletePay id={pay.id} />
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

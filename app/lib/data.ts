@@ -99,7 +99,6 @@ export async function fetchFilteredPays(
         amount: pay.amount,
         status: pay.status,
         note: pay.note ?? '',
-        direction: user.id === pay.senderId ? "Outgoing" : "Incoming"
       };
     });
 
@@ -160,9 +159,26 @@ export async function fetchPaysPages(query: string) {
 
 export async function fetchPayById(id: string) {
   try {
+    await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
 
-    // TODO: return this pay
-    return undefined;
+    // Find the pay by id
+    const pay = pays.find(pay => pay.id === id);
+    
+    if (!pay) {
+      return null;
+    }
+
+    // Determine if the user is the sender or receiver
+    const contactId = pay.senderId === user.id ? pay.receiverId : pay.senderId;
+
+    // Format for the edit form
+    return {
+      id: pay.id,
+      contact_id: contactId,
+      amount: pay.amount,
+      status: pay.status,
+      note: pay.note || ''
+    };
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch pay.');

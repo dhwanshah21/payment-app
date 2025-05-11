@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { Pay } from './definitions';
-import { formatCurrency } from './utils';
 
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
@@ -59,14 +58,18 @@ function generateRandomPaysForYear(): Pay[] {
   const months = [...Array(12).keys()]; // 0 to 11
 
   for (const month of months) {
-    const numPays = faker.number.int({ min: 2, max: 5 });
+    const numPays = 5;
+    console.log("Regenerating Data for month");
 
     for (let i = 0; i < numPays; i++) {
       const isSender = faker.datatype.boolean();
       const contact = faker.helpers.arrayElement(contacts);
+      const fakerId = faker.string.uuid();
+
+      console.log("Faker id: ", fakerId);
 
       pays.push({
-        id: faker.string.uuid(),
+        id: fakerId,
         senderId: isSender ? user.id : contact.id,
         receiverId: isSender ? contact.id : user.id,
         amount: parseFloat(faker.finance.amount()),
@@ -75,6 +78,7 @@ function generateRandomPaysForYear(): Pay[] {
         timestamp: faker.date.between({ from: `2024-${month + 1}-01`, to: `2024-${month + 1}-28` }).toISOString(),
       });
     }
+    break;
   }
 
   return pays;

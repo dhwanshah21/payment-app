@@ -28,7 +28,7 @@ export async function createPay(formData: FormData) {
     const amountInCents = amount * 100;
     const date = new Date().toISOString();
 
-    const statusPayment = status === 'pay' ? "paid" : "pending" as 'paid' | 'pending';;
+    const statusPayment = status === 'pay' ? "paid" : "pending" as 'paid' | 'pending';
 
     const currentUserId = user.id;
 
@@ -50,6 +50,65 @@ export async function createPay(formData: FormData) {
     console.log('✅ Payment created:', newPay);
 
     pays.unshift(newPay);
+
+    revalidatePath('/dashboard/pays');
+    revalidatePath('/dashboard');
+    redirect('/dashboard/pays');
+}
+
+
+const UpdatePay = FormSchema.omit({ date: true });
+
+export async function updatePay(id: string, formData: FormData) {
+    // Find the pay to update first
+    pays.forEach(pay => console.log("Pay id is", pay.id, " : ", pay.senderId, " : ", pay.receiverId));
+
+    console.log("Id received is", id);
+    
+    const existingPay = pays.find(pay => pay.id === id);
+    
+    if (!existingPay) {
+        throw new Error('Payment not found');
+    }
+    
+    // Only allow editing of pending payments
+    if (existingPay.status !== 'pending') {
+        console.error('Cannot edit a payment that is already paid');
+        redirect('/dashboard/pays');
+    }
+    
+    const { contactId, amount, status, note } = UpdatePay.parse({
+        id: id,
+        contactId: formData.get('contactId'),
+        amount: formData.get('amount'),
+        status: formData.get('status'),
+        note: formData.get('note'),
+    });
+
+    // Convert amount to cents
+    const amountInCents = amount * 100;
+    
+    const payIndex = pays.findIndex(pay => pay.id === id);
+    
+    // Determine sender and receiver based on status
+    const currentUserId = user.id;
+
+    const statusPayment = status === 'pay' ? "paid" : "pending" as 'paid' | 'pending';
+
+    const senderId = statusPayment === 'paid' ? currentUserId : contactId;
+    const receiverId = statusPayment === 'pending' ? currentUserId : contactId;
+
+    // Update the pay
+    pays[payIndex] = {
+        ...pays[payIndex],
+        senderId,
+        receiverId,
+        amount: amountInCents,
+        status: status as 'pending' | 'paid',
+        note: note,
+    };
+
+    console.log('✅ Payment updated:', pays[payIndex]);
 
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');

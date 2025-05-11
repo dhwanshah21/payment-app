@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updatePay } from '@/app/lib/actions';
 
 export default function EditPayForm({
   pay,
@@ -17,8 +18,11 @@ export default function EditPayForm({
   pay: PayForm;
   contacts: ContactField[];
 }) {
+  const updatePayWithId = updatePay.bind(null, pay.id);
+  console.log("You have reached edit form", updatePayWithId);
+  
   return (
-    <form>
+    <form action = {updatePayWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Contact Name */}
         <div className="mb-4">

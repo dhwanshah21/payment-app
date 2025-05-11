@@ -14,9 +14,11 @@ export function CreatePay() {
 }
 
 export function UpdatePay({ id }: { id: string }) {
+  console.log("Update pay clicked with id", id);
+  
   return (
     <Link
-      href="/dashboard/pays"
+      href={`/dashboard/pays/edit/${id}`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
