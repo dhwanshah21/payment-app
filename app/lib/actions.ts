@@ -59,12 +59,13 @@ export async function createPay(formData: FormData) {
 
 const UpdatePay = FormSchema.omit({ date: true });
 
-export async function updatePay(id: string, formData: FormData) {
+export async function updatePay( id: string, formData: FormData) {
+   
     // Find the pay to update first
     pays.forEach(pay => console.log("Pay id is", pay.id, " : ", pay.senderId, " : ", pay.receiverId));
 
     console.log("Id received is", id);
-    
+
     const existingPay = pays.find(pay => pay.id === id);
     
     if (!existingPay) {
@@ -84,6 +85,7 @@ export async function updatePay(id: string, formData: FormData) {
         status: formData.get('status'),
         note: formData.get('note'),
     });
+    console.log("Amount is", amount);
 
     // Convert amount to cents
     const amountInCents = amount * 100;
@@ -114,3 +116,28 @@ export async function updatePay(id: string, formData: FormData) {
     revalidatePath('/dashboard');
     redirect('/dashboard/pays');
 }
+
+export async function deletePay(id: string) {
+    console.log("Delete entry:", id);
+    // Find the pay to delete
+    const payIndex = pays.findIndex(pay => pay.id === id);
+    
+    if (payIndex === -1) {
+      throw new Error('Payment not found');
+    }
+    
+    // Only allow deletion of pending payments
+    if (pays[payIndex].status !== 'pending') {
+      console.error('Cannot delete a payment that is already paid');
+      redirect('/dashboard/pays');
+    }
+    
+    // Remove the pay from the array
+    pays.splice(payIndex, 1);
+    
+    console.log('✅ Payment deleted:', id);
+    
+    revalidatePath('/dashboard/pays');
+    revalidatePath('/dashboard');
+    redirect('/dashboard/pays');
+  }

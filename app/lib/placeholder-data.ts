@@ -3,6 +3,7 @@ import { Pay } from './definitions';
 
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
+
 const user = {
   id: '410544b2-4001-4271-9855-fec4b6a6442a',
   name: 'User',
@@ -50,7 +51,7 @@ const contacts = [
 ];
 
 // TODO: Generate a years worth of random pays using the contacts above
-const pays: Pay[] = generateRandomPaysForYear();
+export const pays: Pay[] = generateRandomPaysForYear();
 
 function generateRandomPaysForYear(): Pay[] {
   const pays: Pay[] = [];
@@ -59,17 +60,13 @@ function generateRandomPaysForYear(): Pay[] {
 
   for (const month of months) {
     const numPays = 5;
-    console.log("Regenerating Data for month");
 
     for (let i = 0; i < numPays; i++) {
       const isSender = faker.datatype.boolean();
       const contact = faker.helpers.arrayElement(contacts);
-      const fakerId = faker.string.uuid();
-
-      console.log("Faker id: ", fakerId);
 
       pays.push({
-        id: fakerId,
+        id: faker.string.uuid(),
         senderId: isSender ? user.id : contact.id,
         receiverId: isSender ? contact.id : user.id,
         amount: parseFloat(faker.finance.amount()),
@@ -78,7 +75,6 @@ function generateRandomPaysForYear(): Pay[] {
         timestamp: faker.date.between({ from: `2024-${month + 1}-01`, to: `2024-${month + 1}-28` }).toISOString(),
       });
     }
-    break;
   }
 
   return pays;
@@ -96,6 +92,8 @@ const activity = calculateActivityByMonth();
 
 function calculateActivityByMonth(): any {
   const monthActivity: Record<string, number> = {};
+
+  console.log("Activity fetch call");
 
   pays.forEach((pay) => {
     let dateFromTimestamp = new Date(pay.timestamp);
@@ -117,5 +115,5 @@ function calculateActivityByMonth(): any {
   })); 
 }
 
-export { user, contacts, pays, activity };
+export { user, contacts, activity };
 

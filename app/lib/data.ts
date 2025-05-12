@@ -84,6 +84,7 @@ export async function fetchFilteredPays(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
     // Join pays with contacts and filter by search query
+
     const filteredPays = pays.filter(pay => pay.senderId === user.id || pay.receiverId === user.id);
 
     let paysTablefinalResults = filteredPays.map(pay => {
@@ -102,7 +103,7 @@ export async function fetchFilteredPays(
       };
     });
 
-    // Filter by query (check name, email, amount, or note)
+    // Filter by query eg: name, email, amount, note
     paysTablefinalResults = paysTablefinalResults.filter(payTableEntry => {
       return (
         payTableEntry.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -158,10 +159,10 @@ export async function fetchPaysPages(query: string) {
 }
 
 export async function fetchPayById(id: string) {
+  // TODO return this pay
   try {
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
-
-    // Find the pay by id
+    // Finding the pay by id
     const pay = pays.find(pay => pay.id === id);
     
     if (!pay) {
@@ -205,6 +206,7 @@ export async function fetchFilteredContacts(query: string) {
       )
       .map((contact) => {
         // Filter relevant pays once, instead of multiple times
+
         const relevantPays = pays.filter(({ senderId, receiverId }) =>
           (senderId === user.id && receiverId === contact.id) ||
           (receiverId === user.id && senderId === contact.id)
@@ -230,7 +232,6 @@ export async function fetchFilteredContacts(query: string) {
   }
 }
 
-// Fix type for max
-function getRandomMillis(max: any) {
+function getRandomMillis(max: number) {
   return Math.random() * max * 1000;
 }

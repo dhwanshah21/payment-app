@@ -1,10 +1,9 @@
-'use client';
-
 import { ContactField, PayForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
+  PencilIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -19,8 +18,7 @@ export default function EditPayForm({
   contacts: ContactField[];
 }) {
   const updatePayWithId = updatePay.bind(null, pay.id);
-  console.log("You have reached edit form", updatePayWithId);
-  
+
   return (
     <form action = {updatePayWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -32,6 +30,7 @@ export default function EditPayForm({
           <div className="relative">
             <select
               id="contact"
+              required
               name="contactId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue={pay.contact_id}
@@ -58,14 +57,36 @@ export default function EditPayForm({
             <div className="relative">
               <input
                 id="amount"
+                required
                 name="amount"
                 type="number"
+                max={10000000}
                 step="0.01"
-                defaultValue={pay.amount}
+                defaultValue={(pay.amount / 100).toFixed(2)}
                 placeholder="Enter USD amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
+        {/* Pay Note/Description */}
+        <div className="mb-4">
+          <label htmlFor="note" className="mb-2 block text-sm font-medium">
+            Note
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="note"
+                name="note"
+                type="text"
+                defaultValue={pay.note}
+                placeholder="Enter description"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <PencilIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
