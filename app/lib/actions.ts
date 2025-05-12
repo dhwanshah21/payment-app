@@ -64,8 +64,6 @@ export async function updatePay( id: string, formData: FormData) {
     // Find the pay to update first
     pays.forEach(pay => console.log("Pay id is", pay.id, " : ", pay.senderId, " : ", pay.receiverId));
 
-    console.log("Id received is", id);
-
     const existingPay = pays.find(pay => pay.id === id);
     
     if (!existingPay) {
