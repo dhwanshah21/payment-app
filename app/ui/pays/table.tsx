@@ -5,7 +5,6 @@ import { PayStatus, type PaysTable } from '@/app/lib/definitions';
 import clsx from 'clsx';
 import { formatCurrency } from '@/app/lib/utils';
 
-//
 export default async function PaysTable({
   query,
   currentPage,

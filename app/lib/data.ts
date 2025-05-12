@@ -46,7 +46,7 @@ export async function fetchLatestPays(userId: string) {
   }
 }
 
-export async function fetchCardData() {
+export async function fetchCardData(pays: Pay[]) {
   try {
     await Promise.all([
       new Promise((resolve) => setTimeout(resolve, getRandomMillis(3))),
@@ -61,13 +61,16 @@ export async function fetchCardData() {
     const finalPays = pays;
     const numberOfPays = finalPays.length;
 
+    console.log("Final length of pays", finalPays.length);
+    finalPays.forEach(f => console.log(`Payid: ${f.id} timestamp: ${f.timestamp} amount: ${f.amount}`));
+
     // Calculate total paid and pending in cents
     const totalPaidPays = formatCurrency(
-      finalPays.filter(pay => pay.status === 'paid' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
+      finalPays.filter(pay => pay.status === PayStatus.Paid && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
     );
 
     const totalPendingPays = formatCurrency(
-      finalPays.filter(pay => pay.status === 'pending' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
+      finalPays.filter(pay => pay.status === PayStatus.Pending && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
     );
 
     return {
@@ -92,6 +95,7 @@ export async function fetchFilteredPays(
   try {
     // Join pays with contacts and filter by search query
     // TODO: filter the related pay joined data for the query string passed
+
 
 
     const filteredPays = pays.filter(pay => pay.senderId === user.id || pay.receiverId === user.id);
@@ -134,6 +138,8 @@ export async function fetchFilteredPays(
     }
 
     paysTablefinalResults.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    paysTablefinalResults.forEach(f => console.log(`Payid: ${f.id} timestamp: ${f.date} amount: ${f.amount}`));
 
     // Return paginated results
     return paysTablefinalResults.slice(offset, offset + ITEMS_PER_PAGE);

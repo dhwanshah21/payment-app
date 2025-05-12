@@ -1,5 +1,6 @@
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
+import { PaysProvider } from './PaysContext';
 
 // experimental_ppr only supported for Next 15
 // export const experimental_ppr = true;
@@ -11,7 +12,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        <PaysProvider>
+          {children}
+        </PaysProvider>
+
+      </body>
     </html>
   );
 }

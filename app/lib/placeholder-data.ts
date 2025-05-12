@@ -53,7 +53,7 @@ const contacts = [
 // TODO: Generate a years worth of random pays using the contacts above
 export const pays: Pay[] = generateRandomPaysForYear();
 
-function generateRandomPaysForYear(): Pay[] {
+export function generateRandomPaysForYear(): Pay[] {
   console.log("Generate pay once");
   const pays: Pay[] = [];
   const months = [...Array(12).keys()]; // 0 to 11
@@ -126,7 +126,7 @@ export function getRandomDateInMonth(month: number): string {
 
 export function calculateActivityByMonth(): any {
   const monthActivity: Record<string, number> = {};
-  
+
   pays.forEach((pay) => {
     let dateFromTimestamp = new Date(pay.timestamp);
     const month = dateFromTimestamp.toLocaleString('en-US', { month: 'short' });

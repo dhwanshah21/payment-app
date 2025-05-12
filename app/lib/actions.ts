@@ -6,6 +6,7 @@ import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { PayStatus } from './definitions';
+import { usePays } from '../PaysContext';
 
 
 const FormSchema = z.object({
@@ -48,13 +49,13 @@ export async function createPay(formData: FormData) {
         receiverId,
     }
 
-    console.log('Payment created:', newPay.id);
-
     pays.unshift(newPay);
+
+    console.log('Payment created:', newPay.id);
 
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');
-    redirect('/dashboard/pays');
+    redirect('/dashboard/pays?refetch=true');
 }
 
 
