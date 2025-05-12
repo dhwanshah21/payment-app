@@ -5,6 +5,7 @@ import { pays, user } from './placeholder-data';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { PayStatus } from './definitions';
 
 
 const FormSchema = z.object({
@@ -29,18 +30,18 @@ export async function createPay(formData: FormData) {
     const amountInCents = amount * 100;
     const date = new Date().toISOString();
 
-    const statusPayment = status === 'pay' ? "paid" : "pending" as 'paid' | 'pending';
+    const statusPayment = status === 'pay' ? "paid" : "pending" as PayStatus.Paid | PayStatus.Pending;
 
     const currentUserId = user.id;
 
-    const senderId = statusPayment === 'paid' ? currentUserId : contactId;
-    const receiverId = statusPayment === 'pending' ? currentUserId : contactId;
+    const senderId = statusPayment === PayStatus.Paid ? currentUserId : contactId;
+    const receiverId = statusPayment === PayStatus.Pending ? currentUserId : contactId;
 
     const newPay = {
         id: randomUUID().toString(),
         contactId: contactId,
         amount: amountInCents,
-        status: statusPayment,
+        status: statusPayment as PayStatus.Paid | PayStatus.Pending,
         note: note,
         timestamp: date,
         senderId,
@@ -89,10 +90,10 @@ export async function updatePay( id: string, formData: FormData) {
     // Determine sender and receiver based on status
     const currentUserId = user.id;
 
-    const statusPayment = status === 'pay' ? "paid" : "pending" as 'paid' | 'pending';
+    const statusPayment = status === 'pay' ? "paid" : "pending" as PayStatus.Paid | PayStatus.Pending;
 
-    const senderId = statusPayment === 'paid' ? currentUserId : contactId;
-    const receiverId = statusPayment === 'pending' ? currentUserId : contactId;
+    const senderId = statusPayment === PayStatus.Paid ? currentUserId : contactId;
+    const receiverId = statusPayment === PayStatus.Pending ? currentUserId : contactId;
 
     // Update the pay
     pays[payIndex] = {
@@ -100,7 +101,7 @@ export async function updatePay( id: string, formData: FormData) {
         senderId,
         receiverId,
         amount: amountInCents,
-        status: status as 'pending' | 'paid',
+        status: status as PayStatus.Pending | PayStatus.Paid,
         note: note,
     };
 

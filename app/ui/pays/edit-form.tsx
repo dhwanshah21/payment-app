@@ -1,4 +1,4 @@
-import { ContactField, PayForm } from '@/app/lib/definitions';
+import { ContactField, PayForm, PayStatus } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
@@ -108,7 +108,7 @@ export default function EditPayForm({
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={pay.status === 'pending'}
+                  defaultChecked={pay.status === PayStatus.Pending}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -124,8 +124,8 @@ export default function EditPayForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  disabled = {pay.status === 'pending'}
-                  defaultChecked={pay.status === 'paid'}
+                  disabled = {pay.status === PayStatus.Pending}
+                  defaultChecked={pay.status === PayStatus.Paid}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label

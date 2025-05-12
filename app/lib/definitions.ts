@@ -27,7 +27,7 @@ export type Pay = {
   senderId: string;
   receiverId: string;
   amount: number;
-  status: 'pending' | 'paid';
+  status: PayStatus;
   note?: string;
   timestamp: string;
 };
@@ -44,6 +44,7 @@ export type LatestPay = {
   email: string;
   amount: number;
   note?: string
+  direction?: string;
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
@@ -54,8 +55,7 @@ export type LatestPayRaw = Omit<LatestPay, 'amount'> & {
 export type PaysTable = LatestPay & {
   contact_id: string;
   date: string;
-  status: 'pending' | 'paid';
-  direction: string;
+  status: PayStatus;
 };
 
 export type ContactsTableType = {
@@ -88,5 +88,5 @@ export type PayForm = {
   contact_id: string;
   amount: number;
   note?: string;
-  status: 'pending' | 'paid';
+  status: PayStatus;
 };

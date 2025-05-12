@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from '@/app/ui/button';
+import { PayStatus } from "../lib/definitions";
 
 export default function StatusFilter() {
   const searchParams = useSearchParams();
@@ -34,14 +35,14 @@ export default function StatusFilter() {
           All
         </Button>
         <Button 
-          onClick={() => handleStatusChange('pending')}
-          className={`px-3 py-2 h-8 text-xs rounded-none ${status === 'pending' ? 'bg-blue-600 text-white' : '!text-black bg-gray-100 hover:bg-gray-200'}`}
+          onClick={() => handleStatusChange(PayStatus.Pending)}
+          className={`px-3 py-2 h-8 text-xs rounded-none ${status === PayStatus.Pending ? 'bg-blue-600 text-white' : '!text-black bg-gray-100 hover:bg-gray-200'}`}
         >
           Pending
         </Button>
         <Button 
-          onClick={() => handleStatusChange('paid')}
-          className={`px-3 py-2 h-8 text-xs rounded-r-md rounded-l-none ${status === 'paid' ? 'bg-blue-600 text-white' : '!text-black bg-gray-100 hover:bg-gray-200'}`}
+          onClick={() => handleStatusChange(PayStatus.Paid)}
+          className={`px-3 py-2 h-8 text-xs rounded-r-md rounded-l-none ${status === PayStatus.Paid ? 'bg-blue-600 text-white' : '!text-black bg-gray-100 hover:bg-gray-200'}`}
         >
           Completed
         </Button>

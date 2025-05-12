@@ -2,7 +2,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
-import { LatestPay } from '@/app/lib/definitions';
+import { LatestPay, Pay } from '@/app/lib/definitions';
 import { fetchLatestPays } from "@/app/lib/data";
 import { user } from '@/app/lib/placeholder-data';
 import { formatCurrency } from '@/app/lib/utils';
@@ -46,7 +46,13 @@ export default async function LatestPays() {
                 <div className="col-span-3 hidden sm:flex items-center text-sm text-gray-500">
                   {pay.note}
                 </div>
-                <p className={`${lusitana.className} col-span-3 text-right truncate text-sm font-medium md:text-base`}>
+                <p className={clsx(
+                  `${lusitana.className} col-span-3 text-right truncate text-sm font-medium md:text-base`,
+                  {
+                    'text-green-600': pay.direction === 'Incoming',
+                    'text-red-600': pay.direction === 'Outgoing',
+                  }
+                )}>
                   {formatCurrency(pay.amount)}
                 </p>
               </div>

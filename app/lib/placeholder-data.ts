@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Pay } from './definitions';
+import { Pay, PayStatus } from './definitions';
 
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
@@ -54,12 +54,12 @@ const contacts = [
 export const pays: Pay[] = generateRandomPaysForYear();
 
 function generateRandomPaysForYear(): Pay[] {
+  console.log("Generate pay once");
   const pays: Pay[] = [];
-
   const months = [...Array(12).keys()]; // 0 to 11
 
   for (const month of months) {
-    const numPays = 5;
+    const numPays = 4;
 
     for (let i = 0; i < numPays; i++) {
       const isSender = faker.datatype.boolean();
@@ -69,8 +69,8 @@ function generateRandomPaysForYear(): Pay[] {
         id: faker.string.uuid(),
         senderId: isSender ? user.id : contact.id,
         receiverId: isSender ? contact.id : user.id,
-        amount: parseFloat(faker.finance.amount()),
-        status: faker.helpers.arrayElement(['pending', 'paid']),
+        amount: parseFloat((Math.random() * (500 - 50) + 50).toFixed(2)) * 100,
+        status: faker.helpers.arrayElement([PayStatus.Pending, PayStatus.Paid]),
         note: faker.helpers.arrayElement(['Restaurants', 'Grocery', 'Movie', 'Dinner', 'Park Tickets']),
         timestamp: faker.date.between({ from: `2024-${month + 1}-01`, to: `2024-${month + 1}-28` }).toISOString(),
       });
@@ -80,6 +80,41 @@ function generateRandomPaysForYear(): Pay[] {
   return pays;
 }
 
+// // Try code REMOVE BELOW
+
+// let cachedPays: Pay[] | null = null;
+
+// export function getPays(): Pay[] {
+//   if (cachedPays) return cachedPays;
+
+//   console.log('Generating pays once from getPays...');
+//   const pays: Pay[] = [];
+//   const months = [...Array(12).keys()]; // 0 to 11
+
+//   for (const month of months) {
+//     const numPays = 4;
+//     for (let i = 0; i < numPays; i++) {
+//       const isSender = faker.datatype.boolean();
+//       const contact = faker.helpers.arrayElement(contacts);
+
+//       pays.push({
+//         id: faker.string.uuid(),
+//         senderId: isSender ? user.id : contact.id,
+//         receiverId: isSender ? contact.id : user.id,
+//         amount: parseFloat((Math.random() * (500 - 50) + 50).toFixed(2)) * 100,
+//         status: faker.helpers.arrayElement([PayStatus.Pending, PayStatus.Paid]),
+//         note: faker.helpers.arrayElement(['Restaurants', 'Grocery', 'Movie', 'Dinner', 'Park Tickets']),
+//         timestamp: faker.date.between({ from: `2024-${month + 1}-01`, to: `2024-${month + 1}-28` }).toISOString(),
+//       });
+//     }
+//   }
+
+//   cachedPays = pays;
+//   return cachedPays;
+// }
+
+
+
 export function getRandomDateInMonth(month: number): string {
   const year = 2024;
   const day = faker.number.int({ min: 1, max: 28 }); // Keep within 28 to avoid invalid dates
@@ -88,15 +123,14 @@ export function getRandomDateInMonth(month: number): string {
 }
 
 // TODO: After you generate pays, calculate the activity for the respective months
-const activity = calculateActivityByMonth();
 
-function calculateActivityByMonth(): any {
+export function calculateActivityByMonth(): any {
   const monthActivity: Record<string, number> = {};
-
+  
   pays.forEach((pay) => {
     let dateFromTimestamp = new Date(pay.timestamp);
-    const month = dateFromTimestamp.toLocaleString('en-US', {month: 'short'});
-    const amount = pay.amount;
+    const month = dateFromTimestamp.toLocaleString('en-US', { month: 'short' });
+    const amount = pay.amount / 100;
     if (!monthActivity[month]) {
       monthActivity[month] = 0;
     }
@@ -109,8 +143,8 @@ function calculateActivityByMonth(): any {
   return months.map((month) => ({
     month,
     activity: monthActivity[month] || 0,
-  })); 
+  }));
 }
 
-export { user, contacts, activity };
+export { user, contacts };
 
