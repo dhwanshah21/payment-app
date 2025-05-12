@@ -6,6 +6,7 @@ import { CreatePay } from '@/app/ui/pays/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { PaysTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
+import StatusFilter from '@/app/ui/status-filter';
 
 export default async function Page({
     searchParams,
@@ -13,12 +14,14 @@ export default async function Page({
     searchParams?: {
         query?: string;
         page?: string;
+        status?: string;
     }
 }) {
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
+    const status = searchParams?.status || 'all';
 
-    const totalPages = await fetchPaysPages(query);
+    const totalPages = await fetchPaysPages(query, status);
 
     return (
         <div className="w-full">
@@ -29,8 +32,11 @@ export default async function Page({
                 <Search placeholder="Search pays..." />
                 <CreatePay />
             </div>
-            <Suspense key={query + currentPage} fallback={<PaysTableSkeleton />}>
-                <Table query={query} currentPage={currentPage} />
+            <div className="mt-4 flex justify-center">
+                <StatusFilter />
+            </div>
+            <Suspense key={query + currentPage + status} fallback={<PaysTableSkeleton />}>
+                <Table query={query} currentPage={currentPage} status={status} />
             </Suspense>
             <div className="mt-5 flex w-full justify-center">
                 <Pagination totalPages={totalPages} />

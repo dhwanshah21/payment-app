@@ -6,7 +6,7 @@ export async function fetchActivity() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
+    await new Promise((resolve) => setTimeout(resolve, getRandomMillis(2)));
 
     return activity;
   } catch (error) {
@@ -80,6 +80,7 @@ const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredPays(
   query: string,
   currentPage: number,
+  status: string = 'all', 
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
@@ -100,6 +101,7 @@ export async function fetchFilteredPays(
         amount: pay.amount,
         status: pay.status,
         note: pay.note ?? '',
+        direction: pay.senderId === user.id ? 'Outgoing' : 'Incoming'
       };
     });
 
@@ -113,6 +115,16 @@ export async function fetchFilteredPays(
       );
     });
 
+    // Filter by status if not 'all'
+    if (status !== 'all') {
+      if (status === 'paid') {
+        paysTablefinalResults = paysTablefinalResults.filter(pay => pay.status === 'paid');
+      }
+      else {
+        paysTablefinalResults = paysTablefinalResults.filter(pay => pay.status === 'pending');
+      }
+    }
+
     // Return paginated results
     return paysTablefinalResults.slice(offset, offset + ITEMS_PER_PAGE);
   }
@@ -122,11 +134,11 @@ export async function fetchFilteredPays(
   }
 }
 
-export async function fetchPaysPages(query: string) {
+export async function fetchPaysPages(query: string, status: string = 'all') {
   // TODO: filter the related pay joined data for the query string passed to find this value
   try {
     // Filter pays with the same logic as above
-    const filteredPays = pays
+    let filteredPays = pays
       .map(pay => {
         const contact = contacts.find(c => c.id === pay.senderId || c.id === pay.receiverId);
         if (contact) {
@@ -135,7 +147,8 @@ export async function fetchPaysPages(query: string) {
             name: contact.name,
             email: contact.email,
             amount: pay.amount,
-            note: pay.note
+            note: pay.note,
+            status: pay.status
           };
         }
       })
@@ -148,6 +161,16 @@ export async function fetchPaysPages(query: string) {
           (pay.note && pay.note.toLowerCase().includes(query.toLowerCase()))
         );
       });
+
+      // Apply status filter
+     if (status !== 'all') {
+      if (status === 'paid') {
+        filteredPays = filteredPays.filter(pay => pay?.status === 'paid');
+      }
+      else {
+        filteredPays = filteredPays.filter(pay => pay?.status === 'pending');
+      }
+    }
 
     // Calculate total pages
     return Math.ceil(filteredPays.length / ITEMS_PER_PAGE);

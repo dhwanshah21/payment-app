@@ -108,7 +108,7 @@ export async function updatePay( id: string, formData: FormData) {
         note: note,
     };
 
-    console.log('✅ Payment updated:', pays[payIndex]);
+    console.log('Payment updated:', pays[payIndex]);
 
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');
@@ -133,7 +133,7 @@ export async function deletePay(id: string) {
     // Remove the pay from the array
     pays.splice(payIndex, 1);
     
-    console.log('✅ Payment deleted:', id);
+    console.log('Payment deleted:', id);
     
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');

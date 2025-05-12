@@ -9,11 +9,13 @@ import { formatCurrency } from '@/app/lib/utils';
 export default async function PaysTable({
   query,
   currentPage,
+  status = 'all'
 }: {
   query: string;
   currentPage: number;
+  status?: string;
 }) {
-  const pays: PaysTable[] = await fetchFilteredPays(query, currentPage);
+  const pays: PaysTable[] = await fetchFilteredPays(query, currentPage, status);
 
   return (
     <div className="mt-6 flow-root">
@@ -97,8 +99,8 @@ export default async function PaysTable({
                     className={clsx(
                       'whitespace-nowrap px-3 py-3 font-medium',
                       {
-                        'text-green-600': pay.status === 'pending',
-                        'text-red-600': pay.status === 'paid',
+                        'text-green-600': pay.status === 'pending' || pay.direction === 'Incoming',
+                        'text-red-600': pay.status === 'paid' && pay.direction === 'Outgoing',
                       }
                     )}
                   >
@@ -110,15 +112,18 @@ export default async function PaysTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {pay.status === 'pending' ? (
                       <>
-                        {/* <ArrowUpTrayIcon className="mr-1 h-4 w-4" /> */}
-                        Pending
+                        Requested
                       </>
                     ) : (
-                      <>
-                        {/* <ArrowDownTrayIcon className="mr-1 h-4 w-4" /> */}
-                        Paid
-                      </>
-                    )}
+                      pay.direction === 'Outgoing' ? (
+                        <>
+                          Paid
+                        </>
+                      ) : (
+                        <>
+                          Received
+                        </>
+                      ))}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

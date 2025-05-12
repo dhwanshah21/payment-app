@@ -93,13 +93,10 @@ const activity = calculateActivityByMonth();
 function calculateActivityByMonth(): any {
   const monthActivity: Record<string, number> = {};
 
-  console.log("Activity fetch call");
-
   pays.forEach((pay) => {
     let dateFromTimestamp = new Date(pay.timestamp);
     const month = dateFromTimestamp.toLocaleString('en-US', {month: 'short'});
     const amount = pay.amount;
-
     if (!monthActivity[month]) {
       monthActivity[month] = 0;
     }
