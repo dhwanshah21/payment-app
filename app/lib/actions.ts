@@ -60,9 +60,6 @@ export async function createPay(formData: FormData) {
 const UpdatePay = FormSchema.omit({ date: true });
 
 export async function updatePay( id: string, formData: FormData) {
-   
-    // Find the pay to update first
-    pays.forEach(pay => console.log("Pay id is", pay.id, " : ", pay.senderId, " : ", pay.receiverId));
 
     const existingPay = pays.find(pay => pay.id === id);
     
@@ -83,7 +80,6 @@ export async function updatePay( id: string, formData: FormData) {
         status: formData.get('status'),
         note: formData.get('note'),
     });
-    console.log("Amount is", amount);
 
     // Convert amount to cents
     const amountInCents = amount * 100;
@@ -116,7 +112,6 @@ export async function updatePay( id: string, formData: FormData) {
 }
 
 export async function deletePay(id: string) {
-    console.log("Delete entry:", id);
     // Find the pay to delete
     const payIndex = pays.findIndex(pay => pay.id === id);
     

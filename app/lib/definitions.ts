@@ -86,7 +86,7 @@ export type ContactField = {
 export type PayForm = {
   id: string;
   contact_id: string;
-  amount: number; // Amount is number from the form. Store in backend in number?
+  amount: number;
   note?: string;
   status: 'pending' | 'paid';
 };

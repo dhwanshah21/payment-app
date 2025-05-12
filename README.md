@@ -104,6 +104,7 @@ Follow the steps below to run this application locally:
    [http://localhost:3000](http://localhost:3000)
 
 ## Built Features
+
 Showcase Dashboard View With all the Latest Pays, Received, Pending, Total Pays, Total Contacts, Recent Activity
 ![Dashboard](./assets/dashboard.png)
 
@@ -125,6 +126,10 @@ Remove an existing payment entry from the list with a single action — array up
 
 🔄 In-memory State Persistence
 All data operations (create/edit/delete) are managed in a temporary in-memory array — no external database required.
+
+## ✨ Bonus Feature Coverage
+
+- ✅ Filtering UI (by search capabilities (amount, name, email, contact), filter record pays (all, pending, completed))
 
 
 ## 🧠 Design Considerations
