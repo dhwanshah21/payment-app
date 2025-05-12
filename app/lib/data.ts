@@ -1,3 +1,4 @@
+import { LatestPay } from './definitions';
 import { formatCurrency } from './utils';
 import { contacts, activity, user, pays } from "@/app/lib/placeholder-data";
 
@@ -6,7 +7,7 @@ export async function fetchActivity() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    await new Promise((resolve) => setTimeout(resolve, getRandomMillis(2)));
+    await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
 
     return activity;
   } catch (error) {
@@ -20,7 +21,7 @@ export async function fetchLatestPays(userId: string) {
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
 
     // TODO: return latest pays data joined with contacts
-    const top6Pays =  pays
+    const latestPays =  pays
       .filter((pay) => pay.senderId === userId || pay.receiverId === userId)
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .map((pay) => {
@@ -37,7 +38,7 @@ export async function fetchLatestPays(userId: string) {
         };
       });
 
-      return top6Pays.slice(0, 6);
+      return latestPays.slice(0, 6);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest pays.');
@@ -51,6 +52,8 @@ export async function fetchCardData() {
       new Promise((resolve) => setTimeout(resolve, getRandomMillis(3))),
       new Promise((resolve) => setTimeout(resolve, getRandomMillis(3))),
     ]);
+
+    // TODO: calculate these values -> numberOfPays, numberOfContacts, totalPaidPays, totalPendingPays
 
     const numberOfPays = pays.length;
     const numberOfContacts = contacts.length;
@@ -85,6 +88,7 @@ export async function fetchFilteredPays(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
     // Join pays with contacts and filter by search query
+    // TODO: filter the related pay joined data for the query string passed
 
     const filteredPays = pays.filter(pay => pay.senderId === user.id || pay.receiverId === user.id);
 
@@ -211,6 +215,7 @@ export async function fetchPayById(id: string) {
 
 export async function fetchContacts() {
   try {
+    // TODO: return contacts
     return contacts;
   } catch (err) {
     console.error('Database Error:', err);
@@ -220,7 +225,8 @@ export async function fetchContacts() {
 
 export async function fetchFilteredContacts(query: string) {
   try {
-
+     // TODO: return contacts with total_pays, total_pending, total_paid
+    
     const lowerCaseQuery = query.toLowerCase();
 
     return contacts
@@ -229,7 +235,6 @@ export async function fetchFilteredContacts(query: string) {
       )
       .map((contact) => {
         // Filter relevant pays once, instead of multiple times
-
         const relevantPays = pays.filter(({ senderId, receiverId }) =>
           (senderId === user.id && receiverId === contact.id) ||
           (receiverId === user.id && senderId === contact.id)

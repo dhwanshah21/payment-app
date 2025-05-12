@@ -25,6 +25,7 @@ export async function createPay(formData: FormData) {
         status: formData.get('status'),
         note: formData.get('note'),
     });
+    
     const amountInCents = amount * 100;
     const date = new Date().toISOString();
 
@@ -34,7 +35,6 @@ export async function createPay(formData: FormData) {
 
     const senderId = statusPayment === 'paid' ? currentUserId : contactId;
     const receiverId = statusPayment === 'pending' ? currentUserId : contactId;
-
 
     const newPay = {
         id: randomUUID().toString(),
@@ -47,7 +47,7 @@ export async function createPay(formData: FormData) {
         receiverId,
     }
 
-    console.log('✅ Payment created:', newPay);
+    console.log('Payment created:', newPay);
 
     pays.unshift(newPay);
 

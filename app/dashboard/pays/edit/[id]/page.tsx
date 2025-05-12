@@ -10,8 +10,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         fetchContacts(),
     ]);
 
-    console.log("Pay and contacts fetched for edit flow");
-
     if (!pay) {
         notFound();
     }

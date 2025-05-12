@@ -21,6 +21,7 @@ export enum PayStatus {
   Paid = 'paid',
 }
 
+// TODO: build out what other fields this should have
 export type Pay = {
   id: string;
   senderId: string;
