@@ -52,6 +52,7 @@ export default function Form({ contacts }: { contacts: ContactField[] }) {
                 required
                 id="amount"
                 name="amount"
+                min={0.01}
                 max={10000000}
                 type="number"
                 step="0.01"
@@ -74,6 +75,7 @@ export default function Form({ contacts }: { contacts: ContactField[] }) {
                 id="note"
                 name="note"
                 type="text"
+                maxLength={100}
                 placeholder="Enter description"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />

@@ -62,6 +62,7 @@ export default function EditPayForm({
                 required
                 name="amount"
                 type="number"
+                min={0.01}
                 max={10000000}
                 step="0.01"
                 defaultValue={(pay.amount / 100).toFixed(2)}
@@ -84,6 +85,7 @@ export default function EditPayForm({
                 id="note"
                 name="note"
                 type="text"
+                maxLength={100}
                 defaultValue={pay.note}
                 placeholder="Enter description"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"

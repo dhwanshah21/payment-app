@@ -47,7 +47,7 @@ export async function createPay(formData: FormData) {
         receiverId,
     }
 
-    console.log('Payment created:', newPay);
+    console.log('Payment created:', newPay.id);
 
     pays.unshift(newPay);
 
@@ -108,7 +108,7 @@ export async function updatePay( id: string, formData: FormData) {
         note: note,
     };
 
-    console.log('Payment updated:', pays[payIndex]);
+    console.log('Payment updated:', pays[payIndex].id);
 
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');
