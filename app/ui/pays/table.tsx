@@ -4,6 +4,7 @@ import { fetchFilteredPays } from '@/app/lib/data';
 import { PayStatus, type PaysTable } from '@/app/lib/definitions';
 import clsx from 'clsx';
 import { formatCurrency } from '@/app/lib/utils';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 //
 export default async function PaysTable({
@@ -115,7 +116,10 @@ export default async function PaysTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {pay.status === PayStatus.Pending ? (
                       <>
-                        Requested
+                        <div className="flex items-center gap-1 text-yellow-700">
+                          <span>Requested</span>
+                          <ClockIcon className="h-4 w-4 text-yellow-500" />
+                        </div>
                       </>
                     ) : (
                       pay.direction === 'Outgoing' ? (

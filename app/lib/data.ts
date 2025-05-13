@@ -1,6 +1,7 @@
 import { Pay, PayStatus } from './definitions';
 import { formatCurrency } from './utils';
-import { contacts, user, calculateActivityByMonth, pays } from "@/app/lib/placeholder-data";
+import { contacts, user, calculateActivityByMonth } from "@/app/lib/placeholder-data";
+import { getPays } from '@/app/lib/pay-store';
 
 export async function fetchActivity() {
   try {
@@ -19,7 +20,8 @@ export async function fetchLatestPays(userId: string) {
   try {
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
     // TODO: return latest pays data joined with contacts
-    let allPaysByUser =  pays.filter((pay: Pay) => (pay.senderId === userId || pay.receiverId === userId) && pay.status === PayStatus.Paid);
+    let allPays = await getPays();
+    let allPaysByUser =  allPays.filter((pay: Pay) => (pay.senderId === userId || pay.receiverId === userId) && pay.status === PayStatus.Paid);
     
     let filteredPays = allPaysByUser.map((pay: Pay) => {
         const otherPartyId = pay.senderId === userId ? pay.receiverId : pay.senderId;
@@ -55,10 +57,11 @@ export async function fetchCardData() {
     ]);
 
     // TODO: calculate these values -> numberOfPays, numberOfContacts, totalPaidPays, totalPendingPays
-    console.log("Fetching card data: ");
+
+    let allPays = await getPays();
     
     const numberOfContacts = contacts.length;
-    const finalPays = pays;
+    const finalPays = allPays;
     const numberOfPays = finalPays.length;
 
     // Calculate total paid and pending in cents
@@ -93,8 +96,9 @@ export async function fetchFilteredPays(
     // Join pays with contacts and filter by search query
     // TODO: filter the related pay joined data for the query string passed
 
+    let allPays = await getPays();
 
-    const filteredPays = pays.filter(pay => pay.senderId === user.id || pay.receiverId === user.id);
+    const filteredPays = allPays.filter(pay => pay.senderId === user.id || pay.receiverId === user.id);
 
     let paysTablefinalResults = filteredPays.map(pay => {
       const contactId = pay.senderId === user.id ? pay.receiverId : pay.senderId;
@@ -148,7 +152,8 @@ export async function fetchPaysPages(query: string, status: string = 'all') {
   // TODO: filter the related pay joined data for the query string passed to find this value
   try {
     // Filter pays with the same logic as above
-    let filteredPays = pays
+    let allPays = await getPays();
+    let filteredPays = allPays
       .map(pay => {
         const contact = contacts.find(c => c.id === pay.senderId || c.id === pay.receiverId);
         if (contact) {
@@ -196,7 +201,8 @@ export async function fetchPayById(id: string) {
   try {
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
     // Finding the pay by id
-    const pay = pays.find(pay => pay.id === id);
+    const allPays = await getPays();
+    const pay = allPays.find(pay => pay.id === id);
     
     if (!pay) {
       return null;
@@ -234,13 +240,15 @@ export async function fetchFilteredContacts(query: string) {
      // TODO: return contacts with total_pays, total_pending, total_paid
     const lowerCaseQuery = query.toLowerCase();
 
+    const allPays = await getPays();
+
     return contacts
       .filter(({ name, email }) =>
         name.toLowerCase().includes(lowerCaseQuery) || email.toLowerCase().includes(lowerCaseQuery)
       )
       .map((contact) => {
         // Filter relevant pays once, instead of multiple times
-        const relevantPays = pays.filter(({ senderId, receiverId }) =>
+        const relevantPays = allPays.filter(({ senderId, receiverId }) =>
           (senderId === user.id && receiverId === contact.id) ||
           (receiverId === user.id && senderId === contact.id)
         );

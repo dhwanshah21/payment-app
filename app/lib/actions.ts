@@ -1,11 +1,12 @@
 'use server'
 
 import { z } from 'zod'
-import { pays, user } from './placeholder-data';
+import { user } from './placeholder-data';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { PayStatus } from './definitions';
+import { getPays, savePays } from './pay-store';
 
 
 const FormSchema = z.object({
@@ -50,7 +51,9 @@ export async function createPay(formData: FormData) {
 
     console.log('Payment created:', newPay.id);
 
+    let pays = await getPays();
     pays.unshift(newPay);
+    await savePays(pays);
 
     revalidatePath('/dashboard/pays');
     revalidatePath('/dashboard');
@@ -61,7 +64,7 @@ export async function createPay(formData: FormData) {
 const UpdatePay = FormSchema.omit({ date: true });
 
 export async function updatePay( id: string, formData: FormData) {
-
+    let pays = await getPays();
     const existingPay = pays.find(pay => pay.id === id);
     
     if (!existingPay) {
@@ -105,6 +108,8 @@ export async function updatePay( id: string, formData: FormData) {
         note: note,
     };
 
+    await savePays(pays);
+
     console.log('Payment updated:', pays[payIndex].id);
 
     revalidatePath('/dashboard/pays');
@@ -114,6 +119,7 @@ export async function updatePay( id: string, formData: FormData) {
 
 export async function deletePay(id: string) {
     // Find the pay to delete
+    let pays = await getPays();
     const payIndex = pays.findIndex(pay => pay.id === id);
     
     if (payIndex === -1) {
@@ -128,6 +134,8 @@ export async function deletePay(id: string) {
     
     // Remove the pay from the array
     pays.splice(payIndex, 1);
+
+    await savePays(pays);
     
     console.log('Payment deleted:', id);
     
