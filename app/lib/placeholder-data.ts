@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker';
-import { Pay, PayStatus } from './definitions';
 import { getPays } from './pay-store';
 
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
@@ -51,15 +49,7 @@ const contacts = [
   },
 ];
 
-export function getRandomDateInMonth(month: number): string {
-  const year = 2024;
-  const day = faker.number.int({ min: 1, max: 28 }); // Keep within 28 to avoid invalid dates
-  const date = new Date(year, month, day, faker.number.int({ min: 0, max: 23 }), faker.number.int({ min: 0, max: 59 }));
-  return date.toISOString();
-}
-
 // TODO: After you generate pays, calculate the activity for the respective months
-
 export async function calculateActivityByMonth(): Promise<any> {
   const monthActivity: Record<string, number> = {};
   const pays = await getPays();
