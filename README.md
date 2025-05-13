@@ -113,7 +113,7 @@ A fully rendered table displaying all pays with search, sorting, and filtering (
 ![PaysTable](./assets/all_pays.png)
 
 💰 Create a New Pay Record
-Add a new payment entry with required fields (e.g., amount, description, contact) directly into a store.
+Add a new payment entry with required fields (e.g., amount, description, contact) directly into an in-memory store.
 ![Create Pay Feature](./assets/create_pay.png)
 ![Create Pay Feature](./assets/create_pay_2.png)
 
@@ -127,8 +127,8 @@ Remove an existing payment entry from the list with a single action — array up
 Filtering UI (by search capabilities (amount, name, email, contact), filter record pays (all, pending, completed))
 ![Filter Pays Feature](./assets/pays_filter_by_name.png)
 
-🔄 State Persistence in App
-All data operations (create/edit/delete) are managed in the system — no external database required.
+🔄 In-memory State Persistence
+All data operations (create/edit/delete) are managed in a temporary in-memory array — no external database required.
 
 ## ✨ Bonus Feature Coverage
 
@@ -137,7 +137,7 @@ All data operations (create/edit/delete) are managed in the system — no extern
 
 ## 🧠 Design Considerations
 
-I designed this application with a focus on simplicity, clarity, and extendability, while adhering to the constraints outlined in the take-home brief.
+I designed this application with a focus on simplicity, clarity, and extendability, while adhering to the in-memory constraint outlined in the take-home brief.
 
 ### 💳 Wallets
 Each pay is associated with a contact, simulating a basic peer-to-peer wallet interaction. This abstraction lays the groundwork for implementing wallet balances or transaction histories in the future.
