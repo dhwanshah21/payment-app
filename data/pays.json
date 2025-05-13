@@ -1,25 +1,5 @@
 [
   {
-    "id": "8fd3a5e0-0c75-4ecf-ad8f-0fc4c4eb529c",
-    "contactId": "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
-    "amount": 200,
-    "status": "paid",
-    "note": "",
-    "timestamp": "2025-05-13T03:47:52.394Z",
-    "senderId": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "receiverId": "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa"
-  },
-  {
-    "id": "e97cb071-e475-452d-8231-f00728e3898a",
-    "contactId": "3958dc9e-742f-4377-85e9-fec4b6a6442a",
-    "amount": 200000,
-    "status": "paid",
-    "note": "Rental",
-    "timestamp": "2025-05-13T02:31:12.262Z",
-    "senderId": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "receiverId": "3958dc9e-742f-4377-85e9-fec4b6a6442a"
-  },
-  {
     "id": "29ec95ac-c0e7-4188-b4b2-acf6db4eb4b2",
     "contactId": "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
     "amount": 2000,
@@ -382,12 +362,12 @@
   },
   {
     "id": "53de7a77-e64c-4ac6-888d-ca2e73f3fe4b",
-    "senderId": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "receiverId": "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    "senderId": "76d65c26-f784-44a2-ac19-586678f7c2f2",
+    "receiverId": "410544b2-4001-4271-9855-fec4b6a6442a",
     "amount": 12517,
     "status": "pending",
-    "note": "Park Tickets",
-    "timestamp": "2024-10-05T16:18:36.086Z"
+    "note": "Park Tickets Yellowstone",
+    "timestamp": "2025-05-13T05:26:13.213Z"
   },
   {
     "id": "c23c0361-b36f-4c76-b8c8-7ea2f7187ec7",
@@ -451,14 +431,5 @@
     "status": "paid",
     "note": "Park Tickets",
     "timestamp": "2024-12-19T22:16:38.440Z"
-  },
-  {
-    "id": "535586e5-e4b3-453e-adb7-540f846b2c48",
-    "senderId": "410544b2-4001-4271-9855-fec4b6a6442a",
-    "receiverId": "3958dc9e-742f-4377-85e9-fec4b6a6442a",
-    "amount": 42116,
-    "status": "pending",
-    "note": "Park Tickets",
-    "timestamp": "2024-12-19T10:53:45.875Z"
   }
 ]

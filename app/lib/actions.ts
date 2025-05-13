@@ -87,6 +87,7 @@ export async function updatePay(id: string, formData: FormData) {
     const statusPayment = status === 'pay' ? "paid" : "pending" as PayStatus.Paid | PayStatus.Pending;
     const senderId = statusPayment === PayStatus.Paid ? user.id : contactId;
     const receiverId = statusPayment === PayStatus.Pending ? user.id : contactId;
+    const date = new Date().toISOString();
 
     // Update the pay
     pays[payIndex] = {
@@ -96,6 +97,7 @@ export async function updatePay(id: string, formData: FormData) {
         amount: amountInCents,
         status: status as PayStatus.Pending | PayStatus.Paid,
         note: note,
+        timestamp: date
     };
 
     await savePays(pays);
