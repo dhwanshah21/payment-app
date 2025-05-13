@@ -16,9 +16,20 @@ export type Contact = {
   image_url: string;
 };
 
+export enum PayStatus {
+  Pending = 'pending',
+  Paid = 'paid',
+}
+
+// TODO: build out what other fields this should have
 export type Pay = {
   id: string;
-  // TODO: build out what other fields this should have
+  senderId: string;
+  receiverId: string;
+  amount: number;
+  status: PayStatus;
+  note?: string;
+  timestamp: string;
 };
 
 export type Activity = {
@@ -31,7 +42,9 @@ export type LatestPay = {
   name: string;
   image_url: string;
   email: string;
-  amount: string;
+  amount: number;
+  note?: string
+  direction?: string;
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
@@ -39,19 +52,14 @@ export type LatestPayRaw = Omit<LatestPay, 'amount'> & {
   amount: number;
 };
 
-export type PaysTable = {
-  id: string;
+export type PaysTable = LatestPay & {
   contact_id: string;
-  name: string;
-  email: string;
-  image_url: string;
   date: string;
-  amount: number;
-  status: 'pending' | 'paid';
+  status: PayStatus;
 };
 
 export type ContactsTableType = {
-  id: string;
+  id: string; 
   name: string;
   email: string;
   image_url: string;
@@ -79,6 +87,6 @@ export type PayForm = {
   id: string;
   contact_id: string;
   amount: number;
-  // TODO: more here
-  status: 'pending' | 'paid';
+  note?: string;
+  status: PayStatus;
 };

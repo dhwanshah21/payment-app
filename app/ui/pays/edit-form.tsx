@@ -1,14 +1,14 @@
-'use client';
-
-import { ContactField, PayForm } from '@/app/lib/definitions';
+import { ContactField, PayForm, PayStatus } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
+  PencilIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { updatePay } from '@/app/lib/actions';
 
 export default function EditPayForm({
   pay,
@@ -17,8 +17,10 @@ export default function EditPayForm({
   pay: PayForm;
   contacts: ContactField[];
 }) {
+  const updatePayWithId = updatePay.bind(null, pay.id);
+
   return (
-    <form>
+    <form action={updatePayWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Contact Name */}
         <div className="mb-4">
@@ -28,7 +30,9 @@ export default function EditPayForm({
           <div className="relative">
             <select
               id="contact"
+              required
               name="contactId"
+              disabled
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue={pay.contact_id}
             >
@@ -41,6 +45,7 @@ export default function EditPayForm({
                 </option>
               ))}
             </select>
+            <input type="hidden" name="contactId" value={pay.contact_id} />
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
@@ -54,14 +59,38 @@ export default function EditPayForm({
             <div className="relative">
               <input
                 id="amount"
+                required
                 name="amount"
                 type="number"
+                min={0.01}
+                max={10000000}
                 step="0.01"
-                defaultValue={pay.amount}
+                defaultValue={(pay.amount / 100).toFixed(2)}
                 placeholder="Enter USD amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
+        {/* Pay Note/Description */}
+        <div className="mb-4">
+          <label htmlFor="note" className="mb-2 block text-sm font-medium">
+            Note
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="note"
+                name="note"
+                type="text"
+                maxLength={100}
+                defaultValue={pay.note}
+                placeholder="Enter description"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <PencilIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
@@ -79,7 +108,7 @@ export default function EditPayForm({
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={pay.status === 'pending'}
+                  defaultChecked={pay.status === PayStatus.Pending}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -95,7 +124,8 @@ export default function EditPayForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  defaultChecked={pay.status === 'paid'}
+                  disabled={pay.status === PayStatus.Pending}
+                  defaultChecked={pay.status === PayStatus.Paid}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label

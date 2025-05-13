@@ -1,16 +1,22 @@
 import Image from 'next/image';
 import { UpdatePay, DeletePay } from '@/app/ui/pays/buttons';
 import { fetchFilteredPays } from '@/app/lib/data';
+import { PayStatus, type PaysTable } from '@/app/lib/definitions';
+import clsx from 'clsx';
+import { formatCurrency } from '@/app/lib/utils';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 //
 export default async function PaysTable({
   query,
   currentPage,
+  status = 'all'
 }: {
   query: string;
   currentPage: number;
+  status?: string;
 }) {
-  const pays = await fetchFilteredPays(query, currentPage);
+  const pays: PaysTable[] = await fetchFilteredPays(query, currentPage, status);
 
   return (
     <div className="mt-6 flow-root">
@@ -55,6 +61,18 @@ export default async function PaysTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   Email
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Amount
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Description
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Payment Status
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Date & Time
+                </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -81,10 +99,53 @@ export default async function PaysTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {pay.email}
                   </td>
+                  <td
+                    className={clsx(
+                      'whitespace-nowrap px-3 py-3 font-medium',
+                      {
+                        'text-green-600': pay.status === PayStatus.Pending || pay.direction === 'Incoming',
+                        'text-red-600': pay.status === PayStatus.Paid && pay.direction === 'Outgoing',
+                      }
+                    )}
+                  >
+                    {formatCurrency(pay.amount)}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {pay.note === '' ? '-' : pay.note}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {pay.status === PayStatus.Pending ? (
+                      <>
+                        <div className="flex items-center gap-1 text-yellow-700">
+                          <span>Requested</span>
+                          <ClockIcon className="h-4 w-4 text-yellow-500" />
+                        </div>
+                      </>
+                    ) : (
+                      pay.direction === 'Outgoing' ? (
+                        <>
+                          Paid
+                        </>
+                      ) : (
+                        <>
+                          Received
+                        </>
+                      ))}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3 text-gray-500">
+                    {new Intl.DateTimeFormat('en-US', {
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    }).format(new Date(pay.date))}
+                  </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdatePay id={pay.id} />
-                      <DeletePay id={pay.id} />
+                      {pay.status === PayStatus.Pending && (
+                        <>
+                          <UpdatePay id={pay.id} />
+                          <DeletePay id={pay.id} />
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

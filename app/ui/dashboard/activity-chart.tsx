@@ -2,6 +2,7 @@ import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 import {fetchActivity} from "@/app/lib/data";
+import { Activity } from '@/app/lib/definitions';
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -10,7 +11,7 @@ import {fetchActivity} from "@/app/lib/data";
 // https://airbnb.io/visx/
 
 export default async function ActivityChart() {
-  const activity = await fetchActivity();
+  const activity: Activity[] = await fetchActivity();
 
   const chartHeight = 350;
   const { yAxisLabels, topLabel } = generateYAxis(activity);
