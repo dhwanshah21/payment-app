@@ -110,7 +110,7 @@ Showcase Dashboard View With all the Latest Pays, Received, Pending, Total Pays,
 
 📋 Dynamic Pays Table
 A fully rendered table displaying all pays with search, sorting, and filtering (All, Completed, Pending) capabilities.
-![Dashboard](./assets/pays.png)
+![PaysTable](./assets/all_pays.png)
 
 💰 Create a New Pay Record
 Add a new payment entry with required fields (e.g., amount, description, contact) directly into an in-memory store.
@@ -121,8 +121,11 @@ Add a new payment entry with required fields (e.g., amount, description, contact
 Modify fields of an existing payment by matching its unique ID — updates reflect instantly in UI.
 ![Edit Pay Feature](./assets/edit_pay.png)
 
-🗑️ Delete Pay Record
+🗑️ Delete Pending / Money Requested Pay Record
 Remove an existing payment entry from the list with a single action — array updates in place.
+
+Filtering UI (by search capabilities (amount, name, email, contact), filter record pays (all, pending, completed))
+![Filter Pays Feature](./assets/pays_filter_by_name.png)
 
 🔄 In-memory State Persistence
 All data operations (create/edit/delete) are managed in a temporary in-memory array — no external database required.
