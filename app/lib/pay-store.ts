@@ -1,8 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
- // your existing generator
-import type { Pay } from './definitions'; // adjust if needed
+import type { Pay } from './definitions';
 import { generateRandomPaysForYear } from './placeholder-data';
+
+// This file is created for central place to store the mock data with save and get pays operation support
 
 const DATA_FILE = path.join(process.cwd(), 'data/pays.json');
 
@@ -13,7 +14,6 @@ export async function getPays(): Promise<Pay[]> {
     if (!Array.isArray(parsed)) throw new Error('Invalid pays.json');
     return parsed;
   } catch (err) {
-    // If file doesn't exist or fails to parse, generate mock and save
     const mockPays = generateRandomPaysForYear();
     await savePays(mockPays);
     return mockPays;

@@ -7,7 +7,6 @@ export async function fetchActivity() {
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
-
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(2)));
     return calculateActivityByMonth();
   } catch (error) {
@@ -21,27 +20,28 @@ export async function fetchLatestPays(userId: string) {
     await new Promise((resolve) => setTimeout(resolve, getRandomMillis(3)));
     // TODO: return latest pays data joined with contacts
     let allPays = await getPays();
-    let allPaysByUser =  allPays.filter((pay: Pay) => (pay.senderId === userId || pay.receiverId === userId) && pay.status === PayStatus.Paid);
-    
+    let allPaysByUser = allPays.filter((pay: Pay) => (pay.senderId === userId || pay.receiverId === userId)
+      && pay.status === PayStatus.Paid);
+
     let filteredPays = allPaysByUser.map((pay: Pay) => {
-        const otherPartyId = pay.senderId === userId ? pay.receiverId : pay.senderId;
-        const contact = contacts.find((c) => c.id === otherPartyId);
+      const otherPartyId = pay.senderId === userId ? pay.receiverId : pay.senderId;
+      const contact = contacts.find((c) => c.id === otherPartyId);
 
-        return {
-          id: pay.id,
-          name: contact?.name ?? 'Unknown',
-          image_url: contact?.image_url ?? '',
-          email: contact?.email ?? '',
-          amount: pay.amount,
-          note: pay?.note,
-          timestamp: pay.timestamp,
-          direction: pay.senderId === userId ? 'Outgoing' : 'Incoming'
-        };
-      });
+      return {
+        id: pay.id,
+        name: contact?.name ?? 'Unknown',
+        image_url: contact?.image_url ?? '',
+        email: contact?.email ?? '',
+        amount: pay.amount,
+        note: pay?.note,
+        timestamp: pay.timestamp,
+        direction: pay.senderId === userId ? 'Outgoing' : 'Incoming'
+      };
+    });
 
-      filteredPays.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      
-      return filteredPays.slice(0, 6);
+    filteredPays.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    return filteredPays.slice(0, 6);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest pays.');
@@ -58,19 +58,18 @@ export async function fetchCardData() {
 
     // TODO: calculate these values -> numberOfPays, numberOfContacts, totalPaidPays, totalPendingPays
 
-    let allPays = await getPays();
-    
+    const allPays = await getPays();
+
     const numberOfContacts = contacts.length;
-    const finalPays = allPays;
-    const numberOfPays = finalPays.length;
+    const numberOfPays = allPays.length;
 
     // Calculate total paid and pending in cents
     const totalPaidPays = formatCurrency(
-      finalPays.filter(pay => pay.status === 'paid' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
+      allPays.filter(pay => pay.status === 'paid' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
     );
 
     const totalPendingPays = formatCurrency(
-      finalPays.filter(pay => pay.status === 'pending' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
+      allPays.filter(pay => pay.status === 'pending' && pay.receiverId === user.id).reduce((sum, pay) => sum + (pay.amount), 0)
     );
 
     return {
@@ -89,7 +88,7 @@ const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredPays(
   query: string,
   currentPage: number,
-  status: string = 'all', 
+  status: string = 'all',
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
@@ -137,7 +136,7 @@ export async function fetchFilteredPays(
       }
     }
 
-    paysTablefinalResults.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    paysTablefinalResults.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     // Return paginated results
     return paysTablefinalResults.slice(offset, offset + ITEMS_PER_PAGE);
@@ -177,8 +176,8 @@ export async function fetchPaysPages(query: string, status: string = 'all') {
         );
       });
 
-      // Apply status filter
-     if (status !== 'all') {
+    // Apply status filter
+    if (status !== 'all') {
       if (status === 'paid') {
         filteredPays = filteredPays.filter(pay => pay?.status === 'paid');
       }
@@ -203,15 +202,14 @@ export async function fetchPayById(id: string) {
     // Finding the pay by id
     const allPays = await getPays();
     const pay = allPays.find(pay => pay.id === id);
-    
+
     if (!pay) {
       return null;
     }
 
-    // Determine if the user is the sender or receiver
+    // User is sender or receiver
     const contactId = pay.senderId === user.id ? pay.receiverId : pay.senderId;
 
-    // Format for the edit form
     return {
       id: pay.id,
       contact_id: contactId,
@@ -237,9 +235,8 @@ export async function fetchContacts() {
 
 export async function fetchFilteredContacts(query: string) {
   try {
-     // TODO: return contacts with total_pays, total_pending, total_paid
+    // TODO: return contacts with total_pays, total_pending, total_paid
     const lowerCaseQuery = query.toLowerCase();
-
     const allPays = await getPays();
 
     return contacts

@@ -20,7 +20,7 @@ export default function EditPayForm({
   const updatePayWithId = updatePay.bind(null, pay.id);
 
   return (
-    <form action = {updatePayWithId}>
+    <form action={updatePayWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Contact Name */}
         <div className="mb-4">
@@ -124,7 +124,7 @@ export default function EditPayForm({
                   name="status"
                   type="radio"
                   value="paid"
-                  disabled = {pay.status === PayStatus.Pending}
+                  disabled={pay.status === PayStatus.Pending}
                   defaultChecked={pay.status === PayStatus.Paid}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />

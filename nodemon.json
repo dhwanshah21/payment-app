@@ -1,5 +1,0 @@
-{
-    "watch": ["server.js", "pages", "components"],
-    "ext": "js,ts,tsx,json",
-    "exec": "npm run start"
-  }
